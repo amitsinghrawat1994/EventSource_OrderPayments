@@ -1,0 +1,6 @@
+@EventSource_OrderPayments.API_HostAddress = http://localhost:5199
+
+GET {{EventSource_OrderPayments.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
