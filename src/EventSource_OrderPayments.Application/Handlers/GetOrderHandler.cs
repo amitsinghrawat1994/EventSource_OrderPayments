@@ -1,25 +1,22 @@
-using Microsoft.EntityFrameworkCore;  // Add this
+using Marten;  // Add this
 using EventSource_OrderPayments.Application.Queries;
 using EventSource_OrderPayments.Infrastructure.ReadModels;
 using MediatR;
-using EventSource_OrderPayments.Infrastructure;
 
 namespace EventSource_OrderPayments.Application.Handlers
 {
     public class GetOrderHandler : IRequestHandler<GetOrder, OrderReadModel>
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IDocumentSession _session;
 
-        public GetOrderHandler(ApplicationDbContext context)
+        public GetOrderHandler(IDocumentSession session)
         {
-            _context = context;
+            _session = session;
         }
 
         public async Task<OrderReadModel> Handle(GetOrder request, CancellationToken cancellationToken)
         {
-            return await _context.Orders
-                .Include(o => o.Items)
-                .FirstOrDefaultAsync(o => o.Id == request.OrderId, cancellationToken);
+            return await _session.LoadAsync<OrderReadModel>(request.OrderId, cancellationToken);
         }
     }
 }

@@ -1,6 +1,37 @@
-@EventSource_OrderPayments.API_HostAddress = http://localhost:5199
+@EventSource_OrderPayments.API_HostAddress = https://localhost:5001
 
-GET {{EventSource_OrderPayments.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### Create Ordersd
+POST {{EventSource_OrderPayments.API_HostAddress}}/api/orders
+Content-Type: application/json
 
-###
+{
+  "customerId": "123e4567-e89b-12d3-a456-426614174000",
+  "items": [
+    {
+      "productId": "456e7890-e89b-12d3-a456-426614174001",
+      "productName": "Sample Product",
+      "quantity": 2,
+      "unitPrice": {
+        "amount": 10.0,
+        "currency": "USD"
+      }
+    }
+  ]
+}
+
+### Process Payment
+POST {{EventSource_OrderPayments.API_HostAddress}}/api/payments
+Content-Type: application/json
+
+{
+  "orderId": "00000000-0000-0000-0000-000000000000",  // Replace with actual order ID from Create Order response
+  "amount": {
+    "amount": 20.0,
+    "currency": "USD"
+  },
+  "paymentMethod": "CreditCard"
+}
+
+### Get Order
+GET {{EventSource_OrderPayments.API_HostAddress}}/api/orders/da427c37-2160-4368-be6f-27965b9b3a71
+  // Replace with actual order ID

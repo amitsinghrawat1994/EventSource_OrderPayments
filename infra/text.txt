@@ -1,0 +1,41 @@
+Seq Dashboard: http://localhost:5341 (no login required by default)
+pgAdmin: http://localhost:8080 (login: admin@example.com / admin)
+RabbitMQ Management: http://localhost:15672 (guest/guest)
+
+
+
+docker-compose up -d
+
+cd src/EventSource_OrderPayments.API
+dotnet run
+
+
+Test Endpoints (use Postman or curl):
+
+Create Order (POST /api/orders):
+{
+  "customerId": "123e4567-e89b-12d3-a456-426614174000",
+  "items": [
+    {
+      "productId": "456e7890-e89b-12d3-a456-426614174001",
+      "productName": "Sample Product",
+      "quantity": 2,
+      "unitPrice": { "amount": 10.0, "currency": "USD" }
+    }
+  ]
+}
+
+Process Payment (POST /api/payments):
+{
+  "orderId": "<order-id-from-above>",
+  "amount": { "amount": 20.0, "currency": "USD" },
+  "paymentMethod": "CreditCard"
+}
+
+Get Order (GET /api/orders/<order-id>).
+
+Verify Event Handling:
+
+Check RabbitMQ at http://localhost:15672 (guest/guest) for published events.
+Events should be consumed asynchronously.
+
