@@ -1,6 +1,5 @@
 using Serilog;
 using Serilog.Sinks.Seq;
-using Microsoft.EntityFrameworkCore;
 using Marten;
 using Marten.AspNetCore;
 using JasperFx.Events.Projections;  // Add this
@@ -27,9 +26,6 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateOrderHandler).Assembly));
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddMassTransit(x =>
 {
@@ -64,12 +60,6 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-}
-
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    context.Database.Migrate();
 }
 
 app.UseHttpsRedirection();
